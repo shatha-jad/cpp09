@@ -1,56 +1,29 @@
-#include "PmergeMe.hpp" // Include the header file for this class
 
-// Constructor - Default constructor
-PmergeMe::PmergeMe()
-{
+#include "PmergeMe.hpp"
+
+PmergeMe::PmergeMe() : _k(0) {}
+
+PmergeMe::PmergeMe(char **argv) : _k(5) {
+    fillAndPrint(argv);
+    sortContainers();
 }
 
-// Constructor that takes a char array as input
-PmergeMe::PmergeMe(char **argv)
-{
-    this->_k = 5; // Initialize k to 5
-    this->fillAndPrint(argv); // Fill vectors from command line arguments and print them
-    this->sortContainers(); // Sort vectors using different algorithms
-}
+PmergeMe::PmergeMe(const PmergeMe &object) : _k(object._k), _vec(object._vec), _deque(object._deque) {}
 
-// Copy constructor
-PmergeMe::PmergeMe(const PmergeMe &object)
-{
-    *this = object; // Copy constructor (assignment)
-}
-
-// Assignment operator overload
-PmergeMe &PmergeMe::operator=(const PmergeMe &rhs)
-{
-    if (this != &rhs)
-    { 
-        // Copy data from 'rhs' to 'this' if needed
-        // You can add code here for deep copying if necessary
+PmergeMe &PmergeMe::operator=(const PmergeMe &rhs) {
+    if (this != &rhs) {
+        _k = rhs._k;
+        _vec = rhs._vec;
+        _deque = rhs._deque;
     }
-    return (*this); // Return the current object
+    return *this;
 }
 
-// Destructor
-PmergeMe::~PmergeMe()
-{
-}
+PmergeMe::~PmergeMe() {}
 
-// Function to print the content of the vector
-void PmergeMe::printVec()
-{
-    std::vector<int>::iterator it;
 
-    for (it = this->_vec.begin(); it != this->_vec.end(); ++it)
-    {
-        std::cout << " " << *it; // Print each element of the vector
-    }
-    std::cout << std::endl; // Print a newline
-}
-
-// Function to fill vectors from command line arguments and print them
-void PmergeMe::fillAndPrint(char **argv)
-{
-    int i = 1;
+void PmergeMe::fillAndPrint(char **argv) {
+ int i = 1;
     std::cout << "Before:";
 
     // Loop through command line arguments
@@ -58,16 +31,24 @@ void PmergeMe::fillAndPrint(char **argv)
     {
         this->_vec.push_back(atoi(argv[i])); // Convert char array to integer and add to vector
         this->_deque.push_back(atoi(argv[i])); // Convert char array to integer and add to deque
-        std::cout << " " << argv[i]; // Print the current argument
-        i++; // Move to the next argument
+        std::cout << " " << argv[i]; 
+        i++; 
     }
-    std::cout << std::endl; // Print a newline
+    std::cout << std::endl; 
 }
 
-// Recursive function to perform insertion sort on a vector
-void PmergeMe::vecInsertion(int begin, int end)
-{
-    for (int i = begin; i < end; i++)
+void PmergeMe::printVec() {
+std::vector<int>::iterator it;
+
+    for (it = this->_vec.begin(); it != this->_vec.end(); ++it)
+    {
+        std::cout << " " << *it;
+    }
+    std::cout << std::endl;
+}
+
+void PmergeMe::vecInsertion(int begin, int end) {
+ for (int i = begin; i < end; i++)
     {
         int tmp = this->_vec[i + 1];
         int j = i + 1;
@@ -82,9 +63,7 @@ void PmergeMe::vecInsertion(int begin, int end)
     }
 }
 
-// Recursive function to perform insertion sort on a deque
-void PmergeMe::dequeInsertion(int begin, int end)
-{
+void PmergeMe::dequeInsertion(int begin, int end) {
     for (int i = begin; i < end; i++)
     {
         int tmp = this->_deque[i + 1];
@@ -100,9 +79,7 @@ void PmergeMe::dequeInsertion(int begin, int end)
     }
 }
 
-// Function to merge two subarrays of a deque
-void PmergeMe::mergeDeque(int begin, int mid, int end)
-{
+void PmergeMe::mergeDeque(int begin, int mid, int end) {
     int n1 = mid - begin + 1;
     int n2 = end - mid;
     int rightIdx = 0;
@@ -136,9 +113,7 @@ void PmergeMe::mergeDeque(int begin, int mid, int end)
     }
 }
 
-// Function to merge two subarrays of a vector
-void PmergeMe::mergeVec(int begin, int mid, int end)
-{
+void PmergeMe::mergeVec(int begin, int mid, int end) {
     int n1 = mid - begin + 1;
     int n2 = end - mid;
     int rightIdx = 0;
@@ -172,9 +147,7 @@ void PmergeMe::mergeVec(int begin, int mid, int end)
     }
 }
 
-// Recursive function to perform merge sort on a vector
-void PmergeMe::vecSort(int begin, int end)
-{
+void PmergeMe::vecSort(int begin, int end) {
     if (end - begin > this->_k)
     {
         int mid = (begin + end) / 2;
@@ -186,10 +159,9 @@ void PmergeMe::vecSort(int begin, int end)
         this->vecInsertion(begin, end); // Use insertion sort for small subarrays
 }
 
-// Recursive function to perform merge sort on a deque
-void PmergeMe::dequeSort(int begin, int end)
-{
-    if (end - begin > this->_k)
+
+void PmergeMe::dequeSort(int begin, int end) {
+     if (end - begin > this->_k)
     {
         int mid = (begin + end) / 2;
         dequeSort(begin, mid); // Recursively sort the left half
@@ -200,9 +172,7 @@ void PmergeMe::dequeSort(int begin, int end)
         this->dequeInsertion(begin, end); // Use insertion sort for small subarrays
 }
 
-// Function to measure and print the time taken to sort vectors
-void PmergeMe::sortContainers()
-{
+void PmergeMe::sortContainers() {
     clock_t start, finish;
     double vecTime, dequeTime;
 

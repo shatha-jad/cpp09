@@ -1,73 +1,43 @@
 #include "PmergeMe.hpp"
+#include <cctype> // for std::isdigit
+#include <cstdlib> // for std::atoi
 
-bool	is_digit(char **av)
+bool is_positive_integer(const char *str)
 {
-	int	i = 1;
-	while (av[i])
-	{
-		int	j = 0;
-		while (av[i][j])
-		{
-			if (isdigit(av[i][j]) == 0)
-				return false;
-			j++;
-		}
-		i++;
-	}
-	return (true);
+    // Check for empty string
+    if (*str == '\0') {
+        return false;
+    }
+
+    // Check for positive integer (no sign allowed)
+    for (; *str; str++) {
+        if (!std::isdigit(*str)) {
+            return false;
+        }
+    }
+    return true;
 }
 
-int	main(int ac, char **av)
+bool are_all_positive_integers(char **argv)
 {
-	if ((ac >= 3 && ac <= 3000) && is_digit(av))
-	{
-		PmergeMe
-	}
-	else
-	{
-		std::cout << "Error Invalid Arguments." << std::endl;
-		std::cout << "Usage: ./PmergeMe 3 5 9 7 4 ..." << std::endl;
-		return (1);
-	}
-
-
-}
-
-
-
-
-
-bool	is_digit(char **argv)
-{
-	int i = 1;
-
-	while (argv[i])
-	{
-		int j = 0;
-		while (argv[i][j])
-		{
-			if (isdigit(argv[i][j]) == 0)
-				return (false);
-			j++;
-		}
-		i++;
-	}
-	return(true);
+    for (int i = 1; argv[i]; i++) {
+        if (!is_positive_integer(argv[i])) {
+            return false;
+        }
+    }
+    return true;
 }
 
 int main(int argc, char **argv)
 {
-    if ((argc >= 3 && argc < 3001) && is_digit(argv))
+    if (argc >= 3 && are_all_positive_integers(argv))
     {
-		PmergeMe sort(argv);
-		return (0);
+        PmergeMe sort(argv);
     }
     else
     {
-        std::cout << "Error Invalid Arguments." << std::endl;
-        std::cout << "Usage: ./PmergeMe 3 5 9 7 4 ..." << std::endl;
-		return (1);
+        std::cerr << "Error Invalid Arguments." << std::endl;
+        return 1;
     }
-    return (0);
+    return 0;
 }
-
