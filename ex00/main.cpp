@@ -5,7 +5,8 @@ int	main(int ac, char **av)
 {
 	if (ac != 2)
 	{
-		std::cerr<<("Usage: ")<<av[0]<<" <exchnage name>" <<std::endl;
+		BitcoinExchange bitcoinexchange;
+		std::cerr << bitcoinexchange.formatErrorMessage("Error: could not open file.") << std::endl;
 		return 1;
 	}
 	std::string exchangeName = av[1];

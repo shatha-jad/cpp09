@@ -30,7 +30,7 @@ BitcoinExchange::BitcoinExchange(const std::string& name) : exchangeName(name) {
 
 
 BitcoinExchange::BitcoinExchange(const BitcoinExchange& other) : exchangeRates(other.exchangeRates), exchangeName(other.exchangeName), newDate(other.newDate), newRate(other.newRate) {
-    std::cout << "Copy constructor called for exchange: " << other.exchangeName << std::endl;
+    std::cout << "Copy constructor called" << std::endl;
 }
 
 BitcoinExchange& BitcoinExchange::operator=(const BitcoinExchange& other) {
@@ -44,7 +44,7 @@ BitcoinExchange& BitcoinExchange::operator=(const BitcoinExchange& other) {
 }
 
 BitcoinExchange::~BitcoinExchange() {
-    std::cout << "Destructor called for exchange: " << exchangeName << std::endl;
+    std::cout << "Destructor called" << std::endl;
     exchangeRates.clear();
 }
 
@@ -81,14 +81,29 @@ bool BitcoinExchange::isValidDate(const std::string& date) {
 }
 
 bool BitcoinExchange::isValidNumber(const std::string& rate) {
-    if (rate.empty()) return false;
-    char* end;
-    double val = std::strtod(rate.c_str(), &end);
-    if (end == rate.c_str() || *end != '\0' || val < 0.0 || val > 1000.0) return false;
+    // Check if the input string 'rate' is empty. If it is, return false as an empty string is not a valid number.
+    if (rate.empty()) 
+        return false;
 
-	newRate = std::strtod(rate.c_str(), nullptr);
+    // Declare a pointer 'end' that will be used by std::strtod to store the address of the first invalid character.
+    char* end;
+
+    // Convert the string 'rate' to a double. std::strtod will set 'end' to point to the character after the last valid digit.
+    double val = std::strtod(rate.c_str(), &end);
+
+    // Check if conversion failed (end equals the start of the string), if there are any characters left in the string after the number (indicating invalid characters were in the string), or if the value is outside the valid range (0.0 to 1000.0).
+    // If any of these conditions are true, return false as the string is not a valid number within the required range.
+    if (end == rate.c_str() || *end != '\0' || val < 0.0 || val > 1000.0) 
+        return false;
+
+    // If the string passed all checks, it is a valid number. Assign the converted double value to the member variable 'newRate'.
+    newRate = val; 
+
+    // Return true as the string is a valid number within the specified range.
     return true;
 }
+
+
 
 void BitcoinExchange::parseLine(const std::string& date, const std::string& rate) {
     if (!isValidDate(date)) {
@@ -113,7 +128,7 @@ void BitcoinExchange::printExchangeRates(const std::string& file) {
     while (getline(input, line)) {
         size_t pipePos = line.find('|');
         if (pipePos == std::string::npos) {
-            std::cerr << formatErrorMessage("Error: invalid file format.") << std::endl;
+            std::cerr << formatErrorMessage("Error: invalid format.") << std::endl;
             continue;
         }
         std::string date = line.substr(0, line.find(' '));
